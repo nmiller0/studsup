@@ -3,7 +3,7 @@ var LeaugeSchema = new mongoose.Schema ({
     name: String,
     size: String,
     tier: Number,
-    teams: [[mongoose.Types.ObjectId]]
+    teams: [{type: mongoose.Schema.Types.ObjectId, ref:"team"}]
 });
 
 var Leauge = mongoose.model('Leauge',LeaugeSchema);

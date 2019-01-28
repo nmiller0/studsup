@@ -7,7 +7,7 @@ var PlayerSchema = new mongoose.Schema ({
     def: Number,
     mid: Number,
     gk: Number,
-    team: mongoose.Types.ObjectId 
+    team: mongoose.Schema.Types.ObjectId 
 });
 
 var Player = mongoose.model('Player',PlayerSchema);
