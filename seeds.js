@@ -16,7 +16,7 @@ for(var i = 0; i < 15; i++){
     p.att = Math.random() * 5;
     p.def = Math.random() * 5;
     p.mid = Math.random() * 5;
-    p.position = postions[(Math.ceil( Math.random() * 3))];
+    p.position = postions[(Math.floor( Math.random() * 4))];
     playersOne.push(p);
 }
 
@@ -28,7 +28,7 @@ for(var i = 0; i < 15; i++){
     p.att = Math.random() * 5
     p.def = Math.random() * 5
     p.mid = Math.random() * 5
-    p.position = postions[(Math.ceil( Math.random() * 3))];
+    p.position = postions[(Math.floor( Math.random() * 4))];
     playersTwo.push(p);
 }
 var players2Mongoose = [];
