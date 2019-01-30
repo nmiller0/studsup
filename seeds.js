@@ -49,12 +49,10 @@ playersOne.forEach(function(player){
         if(err){
             console.log(err);
         } else{
-            //console.log(newPlayer);
             players1Mongoose.push(newPlayer);
         }
     });
 });
-// is the problem just that these functions depend on one another?
 function seedDB(){
     teamOne.players = players1Mongoose;
     teamTwo.players = players2Mongoose;
@@ -64,7 +62,7 @@ function seedDB(){
         } else{
             console.log(newTeam);
             Player.find({}, function(err, players){
-                var onePlayers = players.slice(0,12);
+                var onePlayers = players.slice(0,11);
                 console.log(onePlayers.length);
                 onePlayers.forEach(function(player){
                     newTeam.players.push(player);
@@ -79,7 +77,7 @@ function seedDB(){
         } else{
             console.log(newTeam);
             Player.find({}, function(err, players){
-                var onePlayers = players.slice(12,25);
+                var onePlayers = players.slice(12,23);
                 console.log(onePlayers.length);
                 onePlayers.forEach(function(player){
                     newTeam.players.push(player);
