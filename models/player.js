@@ -6,9 +6,11 @@ var PlayerSchema = new mongoose.Schema ({
     att: Number,
     def: Number,
     mid: Number,
-    team: mongoose.Types.ObjectId 
+    gk: Number,
+    team: mongoose.Schema.Types.ObjectId 
 });
 
 var Player = mongoose.model('Player',PlayerSchema);
 
 module.exports = Player; 
+
