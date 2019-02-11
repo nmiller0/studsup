@@ -1,52 +1,71 @@
 var Match = require("../models/match");
-var Player = require("../models/")
-var models = require("../models")
-var matchController = {};
+var Player = require("../models/");
+var models = require("../models");
+var asyncModule = require("async");
 
-module.exports.playMatch = function (homeTeam, awayTeam) {
-    var homeDef = 0;
-    var homeAtt = 0;
-    var homeMid = 0;
-    homeTeam.players.forEach(function(player){
-        // Problem is that the program marches on and does not include this info in the coeff
-        models.Player.findById(player, function(err, foundPlayer){
-            homeAtt += foundPlayer.att;
-            homeMid += foundPlayer.mid;
-            homeDef += foundPlayer.def;
-        });
+
+function getTeamPlayers(team){
+    var promise = models.Player.find({ "_id" : { $in : team.players } });
+    return promise;
+}
+
+async function getTeamCoeff(team, callback){
+    var coeff = 0;
+    await models.Player.find({ "_id" : { $in : team.players } }, function(err, players){
+        players.forEach(function(player){
+            console.log(player);
+            coeff += player.att;
+            coeff += player.mid;
+            coeff += player.def;
+         });
+         callback(null,coeff);
+         return coeff;
     });
-    var homeCoeff = homeDef + homeAtt + homeMid + 1;
-    console.log(homeCoeff);
-    var awayDef = 0;
-    var awayAtt = 0;
-    var awayMid = 0;
-    
-    awayTeam.players.forEach(function(player){
-        awayAtt += player.att;
-        awayMid += player.mid;
-        awayDef += player.def;
-    });
-    var awayCoeff = awayAtt + awayDef + awayMid;
+}
+
+
+
+module.exports.playMatch = async function (homeTeam, awayTeam) {
     var newMatch = {};
-    if(homeCoeff > awayCoeff){
-        newMatch.result = "Home"
-        newMatch.awayGoals = Math.floor(Math.random()+3)
-        newMatch.homeGoals = newMatch.awayGoals + Math.floor(Math.random()+1)
-    } else {
-        newMatch.result = "Away"
-        newMatch.homeGoals = Math.floor(Math.random()+3)
-        newMatch.awayGoals = newMatch.homeGoals + Math.floor(Math.random()+1)
-    }
-    console.log(homeCoeff);
-    console.log(awayCoeff);
+    
 
-    newMatch.homeTeam = homeTeam;
-    newMatch.awayTeam = awayTeam;
-    Match.create(newMatch, function(err, createdMatch){
-        if(err){
-            console.log(err);
-        } else{
-            console.log(createdMatch);
+    //run calls for both teams in paraellel so that both calls finish
+    asyncModule.parallel([
+        function(callback){
+            getTeamCoeff(homeTeam,callback);
+        },
+        function(callback){
+            getTeamCoeff(awayTeam,callback);
         }
-    });
+    ], function(err,results){
+        var homeCoeff = results[0];
+        var awayCoeff = results[1];
+        if(homeCoeff > awayCoeff){
+            newMatch.result = "Home";
+            newMatch.awayGoals = Math.floor(Math.random()*3);
+            newMatch.homeGoals = newMatch.awayGoals + Math.floor(Math.random()+1);
+        } else {
+            newMatch.result = "Away";
+            newMatch.homeGoals = Math.floor(Math.random()*3);
+            newMatch.awayGoals = newMatch.homeGoals + Math.floor(Math.random()+1);
+        }
+        newMatch.homeTeam = homeTeam;
+        newMatch.awayTeam = awayTeam;
+        Match.create(newMatch, function(err, createdMatch){
+            console.log(homeCoeff);
+            console.log(awayCoeff);
+            if(err){
+                console.log(err);
+            } else{
+                console.log(createdMatch);
+            }
+            return createdMatch;
+        });
+    })
+    
+    
+
+    
+
+    //async.parallel([], function(){return;});
 }
