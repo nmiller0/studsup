@@ -13,7 +13,6 @@ async function getTeamCoeff(team, callback){
     var coeff = 0;
     await models.Player.find({ "_id" : { $in : team.players } }, function(err, players){
         players.forEach(function(player){
-            console.log(player);
             coeff += player.att;
             coeff += player.mid;
             coeff += player.def;
@@ -25,10 +24,8 @@ async function getTeamCoeff(team, callback){
 
 
 
-module.exports.playMatch = async function (homeTeam, awayTeam) {
+module.exports.playMatch = async function (homeTeam, awayTeam, callback=null, res=null) {
     var newMatch = {};
-    
-
     //run calls for both teams in paraellel so that both calls finish
     asyncModule.parallel([
         function(callback){
@@ -57,7 +54,11 @@ module.exports.playMatch = async function (homeTeam, awayTeam) {
             if(err){
                 console.log(err);
             } else{
+                console.log("Match Created");
                 console.log(createdMatch);
+            }
+            if(callback){
+                callback(createdMatch, res);
             }
             return createdMatch;
         });
