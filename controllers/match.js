@@ -4,69 +4,73 @@ var models = require("../models");
 var asyncModule = require("async");
 
 
-function getTeamPlayers(team){
-    var promise = models.Player.find({ "_id" : { $in : team.players } });
+function getTeamPlayers(team) {
+    var promise = models.Player.find({
+        "_id": {
+            $in: team.players
+        }
+    });
     return promise;
 }
 
-async function getTeamCoeff(team, callback){
+async function getTeamCoeff(team, callback) {
     var coeff = 0;
-    await models.Player.find({ "_id" : { $in : team.players } }, function(err, players){
-        players.forEach(function(player){
+    await models.Player.find({
+        "_id": {
+            $in: team.players
+        }
+    }, function (err, players) {
+        players.forEach(function (player) {
             coeff += player.att;
             coeff += player.mid;
             coeff += player.def;
-         });
-         callback(null,coeff);
-         return coeff;
+        });
+        callback(null, coeff);
+        return coeff;
     });
 }
 
 
 
-module.exports.playMatch = async function (homeTeam, awayTeam, callback=null, res=null) {
+module.exports.playMatch = async function (homeTeam, awayTeam, callback = null, res = null) {
     var newMatch = {};
     //run calls for both teams in paraellel so that both calls finish
     asyncModule.parallel([
-        function(callback){
-            getTeamCoeff(homeTeam,callback);
+        function (callback) {
+            getTeamCoeff(homeTeam, callback);
         },
-        function(callback){
-            getTeamCoeff(awayTeam,callback);
+        function (callback) {
+            getTeamCoeff(awayTeam, callback);
         }
-    ], function(err,results){
+    ], function (err, results) {
         var homeCoeff = results[0];
         var awayCoeff = results[1];
-        if(homeCoeff > awayCoeff){
+        if (homeCoeff > awayCoeff) {
             newMatch.result = "Home";
-            newMatch.awayGoals = Math.floor(Math.random()*3);
-            newMatch.homeGoals = newMatch.awayGoals + Math.floor(Math.random()+1);
+            newMatch.awayGoals = Math.floor(Math.random() * 3);
+            newMatch.homeGoals = newMatch.awayGoals + Math.floor(Math.random() + 1);
         } else {
             newMatch.result = "Away";
-            newMatch.homeGoals = Math.floor(Math.random()*3);
-            newMatch.awayGoals = newMatch.homeGoals + Math.floor(Math.random()+1);
+            newMatch.homeGoals = Math.floor(Math.random() * 3);
+            newMatch.awayGoals = newMatch.homeGoals + Math.floor(Math.random() + 1);
         }
         newMatch.homeTeam = homeTeam;
         newMatch.awayTeam = awayTeam;
-        Match.create(newMatch, function(err, createdMatch){
+        Match.create(newMatch, function (err, createdMatch) {
             console.log(homeCoeff);
             console.log(awayCoeff);
-            if(err){
+            if (err) {
                 console.log(err);
-            } else{
+            } else {
                 console.log("Match Created");
                 console.log(createdMatch);
             }
-            if(callback){
+            if (callback) {
                 callback(createdMatch, res);
             }
             return createdMatch;
         });
-    })
-    
-    
-
-    
+    });
 
     //async.parallel([], function(){return;});
 }
