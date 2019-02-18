@@ -44,12 +44,9 @@ function createGoalkeeper(tier = null) {
 
 module.exports.createTeamPlayers = async function (tier = null) {
     var players = [];
-    console.log("CREATING PLAYERS");
     for (var i = 0; i < 24; i++) {
-        console.log("PLAYER:");
         var newPlayer = await module.exports.createNewPlayer(null, null, null, tier);
         players.push(newPlayer);
-        console.log(newPlayer);
     }
     return players;
 };

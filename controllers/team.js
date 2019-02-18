@@ -13,12 +13,6 @@ module.exports.createTeam = async function (name, players = null, tier = null) {
         name: name,
         players: players
     };
-    models.Team.create(team, function (err, createdTeam) {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log(createdTeam);
-            return createdTeam;
-        }
-    });
+    var promise = models.Team.create(team);
+    return promise;
 };
