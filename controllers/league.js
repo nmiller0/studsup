@@ -1,21 +1,37 @@
 var models = require("../models/index");
+var controllers = require("./index");
 var teamController = require("./team");
 
-module.exports.createLeague = async function(name = null, team = null, tier = null){
+module.exports.createLeague = async function (name = null, team = null, tier = null) {
     var teams = [];
     var numTeamsToGen = 20;
-    if(team){
+    var l = {
+        name: name,
+        teams: [],
+        tier: tier
+    };
+    var league = await models.league.create(l);
+    if (team) {
         teams.push(team);
         numTeamsToGen--;
     }
-    for(var i = 0; i < numTeamsToGen; i++){
-        var newTeam = await teamController.createTeam("Test Team", null, tier);
+    for (var i = 0; i < numTeamsToGen; i++) {
+        var newTeam = await teamController.createTeam("Test Team", null, tier, league);
         teams.push(newTeam);
     }
-    var l = {name:name, teams:teams, tier:tier};
-    console.log(l);
-    var league = models.league.create(l);
+    league.teams = teams;
+    league.save();
+    console.log(league);
     return league;
 }
 
-// playLeagueMatch
+module.exports.playLeagueMatch = async function (homeTeam, awayTeam) {
+    var match = await controllers.Match.playMatch(homeTeam, awayTeam, homeTeam.league);
+    var league = await models.league.find(homeTeam.league);
+    //careful of query with one result vs model
+    league = league[0];
+    console.log(league);
+    league.matches.push(match);
+    league.save();
+    return match;
+}

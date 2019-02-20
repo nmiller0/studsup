@@ -5,13 +5,14 @@
 //     league: mongoose.Schema.Types.ObjectId
 var models = require("../models/index");
 var playerController = require("./player");
-module.exports.createTeam = async function (name, players = null, tier = null) {
+module.exports.createTeam = async function (name, players = null, tier = null, league = null) {
     if (!players) {
         players = await playerController.createTeamPlayers(tier);
     }
     var team = {
         name: name,
-        players: players
+        players: players,
+        league: league
     };
     var promise = models.Team.create(team);
     return promise;
