@@ -4,7 +4,7 @@ var leagueSchema = new mongoose.Schema ({
     size: String,
     tier: Number,
     teams: [{type: mongoose.Schema.Types.ObjectId, ref:"team"}],
-    matches: [{type: mongoose.Schema.Types.ObjectId, ref:"player"}]
+    matches: [{type: mongoose.Schema.Types.ObjectId, ref:"match"}]
 });
 
 var League = mongoose.model('League',leagueSchema);
