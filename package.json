@@ -18,9 +18,13 @@
   "homepage": "https://github.com/nmiller0/studsup#readme",
   "dependencies": {
     "async": "^2.6.1",
+    "body-parser": "^1.18.3",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "faker": "^4.1.0",
     "mongoose": "^5.4.9"
+  },
+  "devDependencies": {
+    "eslint": "^5.14.1"
   }
 }

@@ -1,11 +1,12 @@
 var mongoose = require("mongoose");
-var LeaugeSchema = new mongoose.Schema ({
+var leagueSchema = new mongoose.Schema ({
     name: String,
     size: String,
     tier: Number,
-    teams: [{type: mongoose.Schema.Types.ObjectId, ref:"team"}]
+    teams: [{type: mongoose.Schema.Types.ObjectId, ref:"team"}],
+    matches: [{type: mongoose.Schema.Types.ObjectId, ref:"match"}]
 });
 
-var Leauge = mongoose.model('Leauge',LeaugeSchema);
+var League = mongoose.model('League',leagueSchema);
 
-module.exports = Leauge; 
+module.exports = League; 
