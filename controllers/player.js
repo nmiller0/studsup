@@ -19,7 +19,7 @@ module.exports.createNewPlayer = async function (name = null, position = null, a
         name = faker.name.findName();
     }
     if (!position) {
-        position = postions[(Math.ceil(Math.random() * 4))];
+        position = postions[(Math.floor(Math.random() * 4))];
     }
     if (!age) {
         age = 16 + Math.floor(Math.random() * 20);
@@ -33,6 +33,7 @@ module.exports.createNewPlayer = async function (name = null, position = null, a
     p.att = Math.random() * tier;
     p.def = Math.random() * tier;
     p.mid = Math.random() * tier;
+    p.gk = Math.random() * tier;
     p.position = position;
     var promise = models.Player.create(p); 
     return promise;   
