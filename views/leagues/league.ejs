@@ -1,0 +1,22 @@
+<% include ../partials/header %>
+
+<div class = "container-fluid" >
+    <div class ="row">
+        <div class = "col-sm">
+        <% matches.forEach(match => { %>
+            <a href="/matches/<%= match._id  %>">  </a>
+        <% }) %>
+        </div>
+        <div class = "col-sm">
+            <ul>
+                <% teams.forEach(team => { %>
+                    <li><a href="/teams/<%= team._id  %>"> <%= team.name %>   </a></li>
+                <% }) %>
+            </ul>
+        </div>
+        <div class = "col-sm">
+        </div>
+    </div>
+</div>
+
+<% include ../partials/footer %>
