@@ -1,17 +1,17 @@
 <% include ../partials/header %>
 
-<form method="POST" action="/matches">
+<form method="POST" action="/matches" id="teamsForm">
         <div class = "form-group">
-             <select name="homeTeam">
+             <select type="text" name="homeTeam" form="teamsForm">
                 <% teams.forEach(team => { %>
-                        <option value="<%= team._id %>"><%= team.name %></option>
+                        <option type="text" value="<%= team._id %>"><%= team.name %></option>
                 <% }) %>
             </select> 
         </div>
         <div class = "form-group">
-             <select name="homeTeam">
+             <select type="text" name="awayTeam" form="teamsForm">
                 <% teams.forEach(team => { %>
-                        <option value="<%= team._id %>"><%= team.name %></option>
+                        <option type="text" value="<%= team._id %>"><%= team.name %></option>
                 <% }) %>
             </select> 
         </div>

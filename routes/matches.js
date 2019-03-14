@@ -1,9 +1,8 @@
 var express = require("express");
 var router = express.Router();
 var Models = require("../models/index");
-//var controllers = require("../controllers/index");
-var bodyParser = require("body-parser");
 var controllers = require("../controllers/index");
+var bodyParser = require("body-parser");
 
 router.get('/playMatchDemo', (req, res) => {
     playMatchDemo().then(teams => {
@@ -11,15 +10,26 @@ router.get('/playMatchDemo', (req, res) => {
     })
 });
 
+
+router.post('/', (req, res) => {
+    //console.log(req.body);
+    controllers.Team.getTeamObjects(req.body.homeTeam, req.body.awayTeam).then(teams => {
+        controllers.League.playLeagueMatch(teams[0][0],teams[1][0]).then(match =>{
+            console.log("Match Created:");
+            console.log(match);
+            res.redirect("/matches/"+match._id);
+        });
+    });
+});
+
+
 async function playMatchDemo(){
     var leagues = await Models.league.find({});
     var teams = await Models.Team.find({
         "_id":{
             $in: leagues[0].teams
         }
-    });
-    //console.log(teams);
-    
+    });    
     return teams;
 }
 
@@ -54,6 +64,8 @@ async function matchDemoFn(){
 }
 async function fetchMatch(id) {
     var match = await Models.Match.findById(id);
+    console.log(match);
+    // match creation issue??
     var homeTeam = await Models.Team.findById(match.homeTeam);
     var awayTeam = await Models.Team.findById(match.awayTeam);
     var homeTeamPlayers = await Models.Player.find({

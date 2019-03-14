@@ -1,6 +1,11 @@
 var faker = require("faker");
 var models = require("../models/index");
 var playerController = require("./player");
+module.exports.getTeamObjects = async function(home, away){
+    var homeObject = await models.Team.find({"_id":home});
+    var awayObject = await models.Team.find({"_id":away});
+    return [homeObject,awayObject];
+}
 module.exports.createTeam = async function (name = null, players = null, tier = null, league = null) {
     if (!players) {
         players = await playerController.createTeamPlayers(tier);
