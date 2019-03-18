@@ -72,6 +72,8 @@ async function fetchMatch(id) {
         "_id": {
             $in: homeTeam.players
         }
+    }).catch(err => {
+        console.log(err);
     });
     var awayTeamPlayers = await Models.Player.find({
         "_id": {
@@ -81,7 +83,7 @@ async function fetchMatch(id) {
     return {
         match: match,
         homeTeam: homeTeam,
-        awayTeam: homeTeam,
+        awayTeam: awayTeam,
         homeTeamPlayers: homeTeamPlayers,
         awayTeamPlayers: awayTeamPlayers
     };

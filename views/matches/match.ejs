@@ -11,7 +11,7 @@
             <h1 class="border"><%= match.homeTeam.name %> <%= match.homeGoals %> - <%= match.awayGoals %> <%= match.awayTeam.name %></h1>
         </div>
         <div class = "col-sm">
-            <h1>Home Team</h1>
+            <h1>Away Team</h1>
             <%- include('../partials/team', {team:awayTeam, players:awayTeamPlayers}); %>
         </div>
     </div>

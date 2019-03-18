@@ -20,9 +20,9 @@ module.exports.playMatch = async function (homeTeam, awayTeam, league = null) {
     var homeBonusMultiplier = 0.10;
     var matchRandomnessFactor = 20;
 
-    var homeCoeff = await getTeamCoeff(homeTeam);
+    var homeCoeff = await module.exports.getTeamCoeff(homeTeam);
     homeCoeff = (homeCoeff + (homeCoeff * homeBonusMultiplier)) + Math.random() * matchRandomnessFactor;
-    var awayCoeff = await getTeamCoeff(awayTeam);
+    var awayCoeff = await module.exports.getTeamCoeff(awayTeam);
     awayCoeff += Math.random() * matchRandomnessFactor;
 
     console.log(homeCoeff);
