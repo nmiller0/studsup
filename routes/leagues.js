@@ -22,9 +22,59 @@ async function fetchLeague(id) {
             $in: league.teams
         }
     });
+    var table = generateLeagueTable(teams,matches);
     return {
         matches: matches,
-        teams: teams
+        teams: teams,
+        table : table
     };
+}
+
+
+function generateLeagueTable(teams,matches){
+    var table = [];
+    for(var i = 0; i < teams.length; i++){
+        var t = {};
+        t.wins = 0;
+        t.losses = 0;
+        t.draws = 0;
+        t.points = 0;
+        t.gp = 0;
+        t.gd = 0;
+        t.name = teams[i].name;
+        t.id = teams[i]._id;
+        table.push(t);
+    }
+
+    for(var x = 0; x < matches.length; x++){
+        var homeTeam = table.find(t => {
+            console.log("t:" + t.id);
+            console.log("m:" + matches[x].homeTeam);
+            console.log(t.id.toString() == matches[x].homeTeam.toString());
+            return t.id.toString() == matches[x].homeTeam.toString();
+        });
+        var awayTeam = table.find(t => {
+            return t.id.toString() == matches[x].awayTeam.toString();
+        });
+        homeTeam.gp += 1;
+        awayTeam.gp += 1; 
+        homeTeam.gd += matches[x].homeGoals - matches[x].awayGoals;
+        awayTeam.gd += matches[x].awayGoals - matches[x].homeGoals;
+
+        if(matches[x].result === "Home"){
+            homeTeam.wins += 1;
+            homeTeam.points += 3;
+            awayTeam.losses += 1;
+        }
+        if(matches[x].result === "Away"){
+            awayTeam.wins += 1;
+            awayTeam.points += 3;
+            homeTeam.losses += 1;
+        }
+    }
+    table.sort( function(a,b){
+        return b.points - a.points;
+    });
+    return table;
 }
 module.exports = router;
