@@ -1,0 +1,34 @@
+
+<h2><%= team.name %> </h2>
+<p><em>League 1</em></p>
+<h3>Players</h3>
+<table class="table table-hover">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Position</th>
+        <th scope="col">Age</th>
+        <th scope="col">Ovr</th>
+        <th scope="col">Att</th>
+        <th scope="col">Mid</th>
+        <th scope="col">Def</th>
+        <th scope="col">GK</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% players.forEach(player => { %>
+        <tr>
+            <th scope="row">1</th>
+            <td><%= player.name %></td>
+            <td><%= player.position %></td>
+            <td><%= player.age %></td>
+            <td><%= ((player.att + player.def + player.mid)/3).toFixed(2)  %></td>
+            <td><%= player.att.toFixed(2) %></td>
+            <td><%= player.mid.toFixed(2) %></td>
+            <td><%= player.def.toFixed(2) %></td>
+            <td><%= player.gk.toFixed(2) %></td>
+        </tr>  
+    <% }) %>
+          </tbody>
+  </table>

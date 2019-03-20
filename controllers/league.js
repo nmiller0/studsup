@@ -16,7 +16,7 @@ module.exports.createLeague = async function (name = null, team = null, tier = n
         numTeamsToGen--;
     }
     for (var i = 0; i < numTeamsToGen; i++) {
-        var newTeam = await teamController.createTeam("Test Team", null, tier, league);
+        var newTeam = await teamController.createTeam(null, null, tier, league);
         teams.push(newTeam);
     }
     league.teams = teams;
