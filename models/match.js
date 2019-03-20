@@ -8,7 +8,8 @@ var MatchSchema = new mongoose.Schema ({
     homeGoals: Number,
     awayGoals: Number,
     result: String,
-    league: mongoose.Schema.Types.ObjectId 
+    league: mongoose.Schema.Types.ObjectId,
+    season: {type: mongoose.Schema.Types.ObjectId, ref:"season"}
 });
 
 var Match = mongoose.model('Match',MatchSchema);
