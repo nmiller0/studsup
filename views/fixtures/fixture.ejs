@@ -1,0 +1,17 @@
+<% include ../partials/header %>
+<div class = "container-fluid" >
+    <div class ="row">
+        <div class = "col-sm">
+        </div>
+        <div class = "col-sm">
+            <ul>
+                <% fixtures.forEach(f => { %>
+                    <li> <%= f.homeTeam.name %> v <%= f.awayTeam.name %> </li>
+                <% }) %>
+            </ul>
+        </div>
+        <div class = "col-sm">
+        </div>
+    </div>
+</div>
+<% include ../partials/footer %>    
