@@ -1,4 +1,5 @@
 var models = require("../models/index");
+var controllers = require("./index");
 
 var newSeason = async function(league, startYear = null){ 
     var l = await models.league.findById(league);
@@ -8,6 +9,13 @@ var newSeason = async function(league, startYear = null){
     season.teams = l.teams;
     season.league = l._id;
     season.matches = [];
+    var s = await models.Season.create(season);
+    s.fixtures = await controllers.Fixture.generateFixtures(league,s._id);
+    s.save();
+    return s;
+}
+var getSeason = async function(season){
+    return await models.Season.findById(season);
 }
 
 var getCurrentSeason = async function (league) {
@@ -31,5 +39,6 @@ var getCurrentSeason = async function (league) {
 
 module.exports = {
     getCurrentSeason: getCurrentSeason,
-    newSeason : newSeason
+    newSeason : newSeason,
+    getSeason : getSeason
 }
