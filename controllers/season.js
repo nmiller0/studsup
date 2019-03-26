@@ -10,7 +10,9 @@ var newSeason = async function(league, startYear = null){
     season.league = l._id;
     season.matches = [];
     var s = await models.Season.create(season);
-    s.fixtures = await controllers.Fixture.generateFixtures(league,s._id);
+    var fixtures = await controllers.Fixture.generateFixtures(league,s._id);
+    // need to create proper fixtures!
+    s.fixtures = fixtures;
     s.save();
     return s;
 }
@@ -20,18 +22,18 @@ var getSeason = async function(season){
 
 var getCurrentSeason = async function (league) {
     var l = await models.league.findById(league);
-    var seasons = await models.find({
+    var seasons = await models.Season.find({
         "_id": {
             $in: l.seasons
         }
     });
     var latestYear = 0;
     var latestSeason = {};
-    for (var s in seasons) {
+    seasons.forEach(s => {
         if (s.startYear > latestYear) {
             latestSeason = s;
         }
-    }
+    })
 
     return latestSeason;
 }
