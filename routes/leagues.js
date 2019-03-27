@@ -29,6 +29,7 @@ async function fetchLeague(id) {
             $in: league.matches
         }
     });
+    var matchObjects = await controllers.Match.getLeagueMatches(league)
     var teams = await Models.Team.find({
         "_id": {
             $in: league.teams
@@ -36,7 +37,7 @@ async function fetchLeague(id) {
     });
     var table = generateLeagueTable(teams,matches);
     return {
-        matches: matches,
+        matches: matchObjects,
         teams: teams,
         table : table,
         leagueId : id

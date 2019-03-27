@@ -1,5 +1,34 @@
 var models = require("../models");
 
+
+module.exports.getLeagueMatches = async function(league){
+    var matches = await models.Match.find({
+        "_id": {
+            $in: league.matches
+        }
+    });
+    var teams = await models.Team.find({
+        "_id": {
+            $in: league.teams
+        }
+    });
+    var matchObjects = [];
+    for(var i = 0; i < matches.length; i++){
+        var m = {};
+        m.homeTeam = teams.find(t => {
+            return t.id.toString() == matches[i].homeTeam.toString();
+        }).name;
+        m.awayTeam = teams.find(t => {
+            return t.id.toString() == matches[i].awayTeam.toString();
+        }).name;
+        m.homeGoals = matches[i].homeGoals;
+        m.awayGoals = matches[i].awayGoals;
+        m.id = matches[i]._id.toString();
+        matchObjects.push(m);
+    }
+    return matchObjects;
+}
+
 module.exports.getTeamCoeff = async function (team) {
     var coeff = 0;
     var players = await models.Player.find({
