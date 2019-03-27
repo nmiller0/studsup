@@ -1,14 +1,26 @@
 var express = require("express");
 var router = express.Router();
 var Models = require("../models/index");
-//var controllers = require("../controllers/index");
+var controllers = require("../controllers/index");
 var bodyParser = require("body-parser");
+
+router.get('/:id/playLeagueMatch', (req, res) => {
+    var id = req.params.id;
+    playLeagueMatch(id).then(league => {
+        res.render("./matches/playMatch.ejs", {teams:league.teams});
+    })
+});
 
 router.get('/:id', (req, res) => {
     fetchLeague(req.params.id).then(content => {
         res.render("./leagues/league.ejs", content);
     })
 });
+
+async function playLeagueMatch(league){
+    var l = await controllers.League.getLeague(league);
+    return l;
+}
 
 async function fetchLeague(id) {
     var league = await Models.league.findById(id);
@@ -26,7 +38,8 @@ async function fetchLeague(id) {
     return {
         matches: matches,
         teams: teams,
-        table : table
+        table : table,
+        leagueId : id
     };
 }
 

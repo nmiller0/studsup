@@ -13,8 +13,9 @@ module.exports.getTeamObjects = async function (home, away) {
 }
 module.exports.getTeamFixtures = async function (team) {
     var teamObj = await models.Team.findById(team);
-    var league = await controllers.League.getLeague(teamObj.league);
-    var season = await controllers.Season.getCurrentSeason(league)
+    var l = await controllers.League.getLeague(teamObj.league);
+
+    var season = await controllers.Season.getCurrentSeason(l.league._id)
     var fixtures = await models.Fixture.find({
         "_id": {
             $in: season.fixtures
