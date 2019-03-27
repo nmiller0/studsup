@@ -8,23 +8,24 @@ var generateFixtures = async function (league, season) {
     var numTeams = l.teams.length;
     for (var i = 0; i < numTeams; i++) {
         var team = teams.pop();
-        teams.forEach(t =>{
-            var f1 = createFixture(team, t, league, season);
-            var f2 = createFixture(t, team, league, season);
+        for(var x = 0; x < teams.length; x++){
+            var f1 = await createFixture(team, teams[x], league, season);
+            var f2 = await createFixture(teams[x], team, league, season);
             fixtures.push(f1);
             fixtures.push(f2);
-        });
+        }
     }
     return fixtures;
 }
 
-function createFixture(home,away,league,season){
+async function createFixture(home,away,league,season){
     var f = {};
     f.homeTeam = home;
     f.awayTeam = away;
     f.season = season;
     f.league = league;
-    return f;
+    var fixture = await models.Fixture.create(f);
+    return fixture;
 }
 
 module.exports = {

@@ -21,10 +21,10 @@ module.exports.createLeague = async function (name = null, team = null, tier = n
     }
     league.teams = teams;
     await league.save();
-    league.seasons = [await controllers.Season.newSeason(league._id, null)];
+    league.seasons = [];
+    league.seasons.push(await controllers.Season.newSeason(league._id, null));
     console.log(league.seasons[0]);
-    
-    league.save();
+    await league.save();
     console.log(league);
     return league;
 }

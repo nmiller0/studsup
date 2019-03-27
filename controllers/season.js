@@ -13,7 +13,7 @@ var newSeason = async function(league, startYear = null){
     var fixtures = await controllers.Fixture.generateFixtures(league,s._id);
     // need to create proper fixtures!
     s.fixtures = fixtures;
-    s.save();
+    await s.save();
     return s;
 }
 var getSeason = async function(season){
