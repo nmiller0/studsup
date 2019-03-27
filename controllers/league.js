@@ -20,11 +20,22 @@ module.exports.createLeague = async function (name = null, team = null, tier = n
         teams.push(newTeam);
     }
     league.teams = teams;
-    league.save();
+    await league.save();
+    league.seasons = [];
+    league.seasons.push(await controllers.Season.newSeason(league._id, null));
+    console.log(league.seasons[0]);
+    await league.save();
     console.log(league);
     return league;
 }
 
+module.exports.getLeague = async function(league){
+    var l = await models.league.findById(league);
+    l.teams = await models.Team.find({ "_id": {
+        $in: l.teams
+    }});
+    return l;
+}
 module.exports.playLeagueMatch = async function (homeTeam, awayTeam) {
     var match = await controllers.Match.playMatch(homeTeam, awayTeam, homeTeam.league);
     var league = await models.league.find(homeTeam.league);

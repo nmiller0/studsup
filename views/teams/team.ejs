@@ -1,3 +1,20 @@
 <% include ../partials/header %>
-<%- include('../partials/team', {team:team, players:players}); %>
+<div class = "container-fluid" >
+    <div class ="row">
+        <div class = "col-sm">
+            <h2>Squad</h2>
+            <%- include('../partials/team', {team:team, players:players}); %>
+        </div>
+        <div class = "col-sm">
+            <h2>Upcoming Fixtures</h2>
+            <%- include('../partials/fixture', {fixtures:fixtures}); %>
+        </div>
+        <div class = "col-sm">
+            
+
+        </div>
+    </div>
+</div>
+
+
 <% include ../partials/footer %>
