@@ -2,34 +2,28 @@ var express = require("express");
 var app = express();
 var mongoose = require("mongoose");
 app.use(express.static(__dirname + "/public"));
-mongoose.connect("mongodb://localhost:27017/studsupDEV", {
+var database = process.env.DATABASEURL || "mongodb://localhost:27017/studsup";
+
+mongoose.connect(database, {
     useNewUrlParser: true
 });
-var seed = require("./seeds");
-var Team = require("./models/team")
-//seed();
+var Models = require("./models");
+var controllers = require("./controllers");
 var userRoutes = require("./routes/users");
-
-
-var MatchController = require("./controllers/match")
-
-app.get('/matchDemo', (req, res) => {
-    Team.find({}, function (err, foundTeams) {
-        MatchController.playMatch(foundTeams[0],foundTeams[1], renderMatch, res);
-    });
-});
-
-function renderMatch(match,res){
-    console.log("Rendering...");
-    console.log(match);
-    res.render('match.ejs', {
-        match: match,
-    });
-}
-
+var matchRoutes = require("./routes/matches");
+var teamRoutes = require("./routes/teams");
+var leagueRoutes = require("./routes/leagues");
+var bodyParser = require("body-parser");
 app.use("/users", userRoutes);
+app.use("/teams", teamRoutes);
+app.use("/matches", matchRoutes);
+app.use("/leagues", leagueRoutes);
+app.use(bodyParser.urlencoded({ extended: false }))
+
+controllers.League.createLeague("Test League",null,3);
 
 var port = process.env.PORT || 3000;
+
 app.listen(port, () => {
     console.log('App listening on port 3000!');
 });
