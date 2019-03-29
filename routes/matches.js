@@ -10,9 +10,17 @@ router.get('/playMatchDemo', (req, res) => {
     })
 });
 
+router.get('/playLeagueMatch', (req, res) => {
+    playLeagueMatch(req.body.league).then(league => {
+        res.render("./matches/playMatch.ejs", {teams:league.teams});
+    })
+});
+async function playLeagueMatch(league){
+    var l = controllers.League.getLeague(league);
+    return l;
+}
 
 router.post('/', (req, res) => {
-    //console.log(req.body);
     controllers.Team.getTeamObjects(req.body.homeTeam, req.body.awayTeam).then(teams => {
         controllers.League.playLeagueMatch(teams[0][0],teams[1][0]).then(match =>{
             console.log("Match Created:");
@@ -21,6 +29,7 @@ router.post('/', (req, res) => {
         });
     });
 });
+
 
 
 async function playMatchDemo(){
