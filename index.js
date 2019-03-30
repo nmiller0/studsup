@@ -14,11 +14,11 @@ var matchRoutes = require("./routes/matches");
 var teamRoutes = require("./routes/teams");
 var leagueRoutes = require("./routes/leagues");
 var bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use("/users", userRoutes);
 app.use("/teams", teamRoutes);
 app.use("/matches", matchRoutes);
 app.use("/leagues", leagueRoutes);
-app.use(bodyParser.urlencoded({ extended: false }))
 
 controllers.League.createLeague("Test League",null,3);
 

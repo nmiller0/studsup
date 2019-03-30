@@ -38,7 +38,7 @@
                     <% table.forEach(team => { %> 
                     <tr>
                         <th scope="row"><%= num++ %> </th>
-                        <td><a href="/teams/<%= team._id  %>"> <%= team.name %> </a></td>
+                        <td><a href="/teams/<%= team.id.toString(); %>"> <%= team.name %> </a></td>
                         <td><%= team.gp %></td>
                         <td><%= team.wins %></td>
                         <td><%= team.losses %></td>
