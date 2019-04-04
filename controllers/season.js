@@ -1,6 +1,16 @@
 var models = require("../models/index");
 var controllers = require("./index");
 
+var simulateSeason = async function(league) {
+    var season = await getCurrentSeason(league);
+    var seasonlength = season.fixtures.length;
+    for(var i = 0; i < seasonlength; i++){
+        var fixture = await models.Fixture.findById(season.fixtures.pop());
+        var teams = await controllers.Team.getTeamObjects(fixture.homeTeam, fixture.awayTeam);
+        await controllers.League.playLeagueMatch(teams.homeTeam, teams.awayTeam);
+    }
+}
+
 var newSeason = async function(league, startYear = null){ 
     var l = await models.league.findById(league);
     var season = {};
@@ -42,5 +52,6 @@ var getCurrentSeason = async function (league) {
 module.exports = {
     getCurrentSeason: getCurrentSeason,
     newSeason : newSeason,
-    getSeason : getSeason
+    getSeason : getSeason,
+    simulateSeason : simulateSeason
 }

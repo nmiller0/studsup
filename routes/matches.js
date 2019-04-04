@@ -22,7 +22,7 @@ async function playLeagueMatch(league){
 
 router.post('/', (req, res) => {
     controllers.Team.getTeamObjects(req.body.homeTeam, req.body.awayTeam).then(teams => {
-        controllers.League.playLeagueMatch(teams[0][0],teams[1][0]).then(match =>{
+        controllers.League.playLeagueMatch(teams.homeTeam,teams.awayTeam).then(match =>{
             console.log("Match Created:");
             console.log(match);
             res.redirect("/matches/"+match._id);
