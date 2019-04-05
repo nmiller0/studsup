@@ -26,6 +26,7 @@ var newSeason = async function(league, startYear = null){
     await s.save();
     return s;
 }
+
 var getSeason = async function(season){
     return await models.Season.findById(season);
 }

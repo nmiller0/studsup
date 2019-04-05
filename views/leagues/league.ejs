@@ -7,6 +7,9 @@
             <p>
                 <a href="/leagues/<%= leagueId %>/simulateSeason"   class="btn btn-primary" role="button">Simulate Season</a>
             </p>
+            <p>
+                <a href="/leagues/<%= leagueId %>/newSeason"   class="btn btn-primary" role="button">New Season</a>
+            </p>
             <% matches.forEach(match => { %>
                 <p><a href="/matches/<%= match.id  %>"><%= match.homeTeam %> <%= match.homeGoals %> - <%= match.awayGoals %> <%= match.awayTeam %></a></p>
             <% }) %>
