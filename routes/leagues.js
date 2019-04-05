@@ -74,9 +74,6 @@ function generateLeagueTable(teams,matches){
 
     for(var x = 0; x < matches.length; x++){
         var homeTeam = table.find(t => {
-            console.log("t:" + t.id);
-            console.log("m:" + matches[x].homeTeam);
-            console.log(t.id.toString() == matches[x].homeTeam.toString());
             return t.id.toString() == matches[x].homeTeam.toString();
         });
         var awayTeam = table.find(t => {
