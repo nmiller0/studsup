@@ -29,6 +29,15 @@ module.exports.createLeague = async function (name = null, team = null, tier = n
     return league;
 }
 
+module.exports.newSeason = async function(league){ 
+    var l = await module.exports.getLeague(league);
+    var currentSeason = await controllers.Season.getCurrentSeason(league);
+    var newSeason = await controllers.Season.newSeason(league,currentSeason.startYear+1);
+    l.league.seasons.push(newSeason);
+    l.league.matches = [];
+    await l.league.save();
+};
+
 module.exports.getLeague = async function(league){
     var l = await models.league.findById(league);
     var teams = await models.Team.find({ "_id": {

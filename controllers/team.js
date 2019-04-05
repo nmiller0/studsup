@@ -3,13 +3,10 @@ var models = require("../models/index");
 var controllers = require("./index");
 
 module.exports.getTeamObjects = async function (home, away) {
-    var homeObject = await models.Team.find({
-        "_id": home
-    });
-    var awayObject = await models.Team.find({
-        "_id": away
-    });
-    return [homeObject, awayObject];
+    var homeObject = await models.Team.findById(home);
+    var awayObject = await models.Team.findById(away);
+
+    return {homeTeam:homeObject, awayTeam:awayObject};
 }
 module.exports.getTeamFixtures = async function (team) {
     var teamObj = await models.Team.findById(team);

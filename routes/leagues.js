@@ -17,6 +17,18 @@ router.get('/:id', (req, res) => {
     })
 });
 
+router.get('/:id/simulateSeason', (req,res) =>{
+    controllers.Season.simulateSeason(req.params.id).then( l => {
+    res.redirect('/leagues/' + req.params.id)
+    });
+});
+
+router.get('/:id/newSeason', (req,res) =>{
+    controllers.League.newSeason(req.params.id).then( l => {
+        res.redirect('/leagues/' + req.params.id)
+    });
+});
+
 async function playLeagueMatch(league){
     var l = await controllers.League.getLeague(league);
     return l;
