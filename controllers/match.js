@@ -30,40 +30,82 @@ module.exports.getLeagueMatches = async function (league) {
 }
 
 module.exports.getTeamCoeff = async function (team) {
-    var coeff = 0;
     var players = await models.Player.find({
         "_id": {
             $in: team.players
         }
     });
-    players.forEach(function (player) {
-        coeff += player.att;
-        coeff += player.mid;
-        coeff += player.def;
-    });
+    var attackers = selectTopPlayers(getPlayerGroups(players, "att"), 2);
+    var defenders = selectTopPlayers(getPlayerGroups(players, "def"), 4);
+    var midfielders = selectTopPlayers(getPlayerGroups(players, "mid"), 4);
+    var goalkeepers = selectTopPlayers(getPlayerGroups(players, "gk"), 1);
+
+    var attackersCoeff = getGroupCoeff(attackers);
+    var defendersCoeff = getGroupCoeff(defenders);
+    var midfieldersCoeff = getGroupCoeff(midfielders);
+    var goalkeepersCoeff = getGroupCoeff(goalkeepers);
+
+    var coeff = {
+        att: attackersCoeff,
+        def: defendersCoeff,
+        mid: midfieldersCoeff,
+        gk: goalkeepersCoeff,
+        overall: (attackersCoeff + defendersCoeff + midfieldersCoeff + goalkeepersCoeff)
+    };
     return coeff;
 }
 
+function getPlayerGroups(players, pos) {
+    var playerGroup = [];
+    players.forEach(function (player) {
+        if (player.position.toLowerCase() === pos.toLowerCase()) {
+            playerGroup.push(player);
+        }
+    });
+    return playerGroup;
+}
+
+function selectTopPlayers(players, num) {
+    players.sort((a, b) => {
+        return a - b;
+    });
+    var topPlayers = players.slice(players.length - num);
+    return topPlayers;
+}
+
+function getGroupCoeff(players) {
+    var coeff = 0;
+    players.forEach(function (player) {
+        coeff += player.att;
+        coeff += player.def;
+        coeff += player.mid;
+        coeff += player.gk;
+    });
+    return coeff;
+}
+// split players into gk def mid att, then sort and select in a 4-4-2 of best players.
+// return coeff object?
 module.exports.playMatch = async function (homeTeam, awayTeam, league = null) {
     var newMatch = {};
     var homeBonusMultiplier = 0.10;
-    var matchRandomnessFactor = 20;
+    var matchRandomnessFactor = 10;
 
     var homeCoeff = await module.exports.getTeamCoeff(homeTeam);
-    homeCoeff = (homeCoeff + (homeCoeff * homeBonusMultiplier)) + Math.random() * matchRandomnessFactor;
+    homeCoeff.overall = (homeCoeff.overall + (homeCoeff.overall * homeBonusMultiplier)) + Math.random() * matchRandomnessFactor;
     var awayCoeff = await module.exports.getTeamCoeff(awayTeam);
-    awayCoeff += Math.random() * matchRandomnessFactor;
+    awayCoeff.overall += Math.random() * matchRandomnessFactor;
 
     console.log(homeCoeff);
     console.log(awayCoeff);
 
-    var teamDiff = homeCoeff - awayCoeff;
-    var drawThreshold = 7;
+    var teamDiff = homeCoeff.overall - awayCoeff.overall;
+    var drawThreshold = 4;
+
     if (teamDiff > drawThreshold) {
         newMatch.result = "Home";
         newMatch.awayGoals = Math.floor(Math.random() * 3);
         newMatch.homeGoals = newMatch.awayGoals + Math.floor(Math.random() + 1);
-    } else if (teamDiff < -1*drawThreshold) {
+    } else if (teamDiff < -1 * drawThreshold) {
         newMatch.result = "Away";
         newMatch.homeGoals = Math.floor(Math.random() * 3);
         newMatch.awayGoals = newMatch.homeGoals + Math.floor(Math.random() + 1);

@@ -50,7 +50,6 @@ module.exports.playLeagueMatch = async function (homeTeam, awayTeam) {
     var league = await models.league.find(homeTeam.league);
     //careful of query with one result vs model
     league = league[0];
-    console.log(league);
     league.matches.push(match);
     league.save();
     return match;
