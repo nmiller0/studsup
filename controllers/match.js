@@ -1,7 +1,7 @@
 var models = require("../models");
 
 
-module.exports.getLeagueMatches = async function(league){
+module.exports.getLeagueMatches = async function (league) {
     var matches = await models.Match.find({
         "_id": {
             $in: league.matches
@@ -13,7 +13,7 @@ module.exports.getLeagueMatches = async function(league){
         }
     });
     var matchObjects = [];
-    for(var i = 0; i < matches.length; i++){
+    for (var i = 0; i < matches.length; i++) {
         var m = {};
         m.homeTeam = teams.find(t => {
             return t.id.toString() == matches[i].homeTeam.toString();
@@ -57,14 +57,20 @@ module.exports.playMatch = async function (homeTeam, awayTeam, league = null) {
     console.log(homeCoeff);
     console.log(awayCoeff);
 
-    if (homeCoeff > awayCoeff) {
+    var teamDiff = homeCoeff - awayCoeff;
+    var drawThreshold = 7;
+    if (teamDiff > drawThreshold) {
         newMatch.result = "Home";
         newMatch.awayGoals = Math.floor(Math.random() * 3);
         newMatch.homeGoals = newMatch.awayGoals + Math.floor(Math.random() + 1);
-    } else {
+    } else if (teamDiff < -1*drawThreshold) {
         newMatch.result = "Away";
         newMatch.homeGoals = Math.floor(Math.random() * 3);
         newMatch.awayGoals = newMatch.homeGoals + Math.floor(Math.random() + 1);
+    } else {
+        newMatch.result = "Draw";
+        newMatch.homeGoals = Math.floor(Math.random() * 3);
+        newMatch.awayGoals = newMatch.homeGoals;
     }
     newMatch.homeTeam = homeTeam._id;
     newMatch.awayTeam = awayTeam._id;

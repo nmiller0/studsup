@@ -94,6 +94,12 @@ function generateLeagueTable(teams,matches){
             awayTeam.points += 3;
             homeTeam.losses += 1;
         }
+        if(matches[x].result === "Draw"){
+            awayTeam.draws += 1;
+            awayTeam.points += 1;
+            homeTeam.points += 1;
+            homeTeam.draws += 1;
+        }
     }
     table.sort( function(a,b){
         return b.points - a.points;
