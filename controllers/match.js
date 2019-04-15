@@ -83,8 +83,30 @@ function getGroupCoeff(players) {
     });
     return coeff;
 }
-// split players into gk def mid att, then sort and select in a 4-4-2 of best players.
-// return coeff object?
+
+async function generateScorers(team, score){
+    var players = await models.Player.find({
+        "_id": {
+            $in: team.players
+        }
+    });
+    var attackers = selectTopPlayers(getPlayerGroups(players, "att"), 2);
+    var defenders = selectTopPlayers(getPlayerGroups(players, "def"), 4);
+    var midfielders = selectTopPlayers(getPlayerGroups(players, "mid"), 4);
+    var scorers = [];
+    for(var i = 0; i < score; i++){
+        var num = Math.random();
+        if(num > .5){
+            scorers.push(attackers[Math.floor(Math.random() * 2)]);
+        } else if( num < .5 && num > .15){
+            scorers.push(midfielders[Math.floor(Math.random() * 4)])
+        } else {
+            scorers.push(defenders[Math.floor(Math.random() * 4)])
+        }
+    }
+    return scorers;
+}
+
 module.exports.playMatch = async function (homeTeam, awayTeam, league = null) {
     var newMatch = {};
     var homeBonusMultiplier = 0.10;
@@ -114,6 +136,9 @@ module.exports.playMatch = async function (homeTeam, awayTeam, league = null) {
         newMatch.homeGoals = Math.floor(Math.random() * 3);
         newMatch.awayGoals = newMatch.homeGoals;
     }
+    console.log(await generateScorers(homeTeam, newMatch.homeGoals));
+    console.log(await generateScorers(awayTeam, newMatch.awayGoals));
+
     newMatch.homeTeam = homeTeam._id;
     newMatch.awayTeam = awayTeam._id;
     newMatch.league = league;
